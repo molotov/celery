@@ -232,7 +232,7 @@ class Worker(object):
                                 for queue, options in conf.QUEUES.items()
                                     if queue in self.queues)
             for queue in self.queues:
-                if queue not in conf.QUEUES:
+                if queue not in conf.QUEUES_ALL:
                     if conf.CREATE_MISSING_QUEUES:
                         Router(queues=conf.QUEUES).add_queue(queue)
                     else:

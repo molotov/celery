@@ -214,6 +214,7 @@ QUEUES = _get("CELERY_QUEUES") or {DEFAULT_QUEUE: {
                                        "exchange": DEFAULT_EXCHANGE,
                                        "exchange_type": DEFAULT_EXCHANGE_TYPE,
                                        "binding_key": DEFAULT_ROUTING_KEY}}
+QUEUES_ALL = QUEUES
 CREATE_MISSING_QUEUES = _get("CELERY_CREATE_MISSING_QUEUES")
 ROUTES = routes.prepare(_get("CELERY_ROUTES") or [])
 # :--- Broadcast queue settings                     <-   --   --- - ----- -- #

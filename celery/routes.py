@@ -1,5 +1,6 @@
 from celery.exceptions import QueueNotFound
 from celery.utils import instantiate, firstmethod, mpromise
+import conf
 
 _first_route = firstmethod("route_for_task")
 
@@ -28,10 +29,22 @@ class Router(object):
         self.create_missing = create_missing
 
     def add_queue(self, queue):
-        q = self.queues[queue] = {"binding_key": queue,
-                                  "routing_key": queue,
-                                  "exchange": queue,
-                                  "exchange_type": "direct"}
+        try:
+            preq = {
+                "binding_key":   conf.QUEUES_ALL[queue]['binding_key'],
+                "routing_key":   conf.QUEUES_ALL[queue]['routing_key'],
+                "exchange":      conf.QUEUES_ALL[queue]['exchange'],
+                "exchange_type": conf.QUEUES_ALL[queue]['exchange_type']
+            }
+        except KeyError, e:
+            # couldn't find the queue in the config, try our best to creat a
+            # queue.
+            preq = {"binding_key": queue,
+                    "routing_key": queue,
+                    "exchange": queue,
+                    "exchange_type": "direct"}
+                    
+        q = self.queues[queue] = preq
         return q
 
     def route(self, options, task, args=(), kwargs={}):
